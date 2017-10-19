@@ -1,0 +1,81 @@
+apply plugin: "jetty"
+apply plugin: "war"
+apply plugin: "idea"
+
+task wrapper(type: Wrapper) {
+  gradleVersion = "2.7"
+}
+
+repositories {
+   flatDir { dirs "lib" }
+   mavenCentral()
+}
+
+dependencies {
+    compile name: "h2o-genmodel"
+    compile name: "aws-lambda-java-core-1.0.0"
+    compile name: "jython-standalone-2.7.0"
+}
+
+war {
+    archiveName = "ROOT.war"
+}
+
+jettyRunWar.contextPath = ""
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources              
+    into('lib') {
+        from configurations.runtime
+    }           
+}
+
+task buildDocker(type: Copy) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtime
+    }
+    into 'build/docker'
+}
+
+build.dependsOn buildZip
+
+
+//-------------------------------------------------------------------
+// Custom tasks for generating the model POJO
+//-------------------------------------------------------------------
+
+
+task runPyScript(type: Exec) {
+    //commandLine "python", "h2o-model.py"
+	commandLine "python", "-c", "'print(\"Hi\")'"
+}
+
+
+task placeMaliciousDomainModel(type: Copy, dependsOn: runPyScript) {
+    //from "lib/irisModel.java"
+    //into "src/main/java"	
+}
+
+task deleteExtraMaliciousDomainModel(type: Delete, dependsOn: placeMaliciousDomainModel) {
+    //delete "lib/irisModel.java"	
+} 
+
+task(generateModel, dependsOn: deleteExtraMaliciousDomainModel) {
+}
+
+compileJava.dependsOn generateModel
+
+
+//-------------------------------------------------------------------
+// Custom task for cleaning up generated files
+//-------------------------------------------------------------------
+
+task cleanGenerated(type: Delete) {
+    delete "lib/h2o-genmodel.jar",
+           "src/main/java/irisModel.java"
+}
+
+clean.dependsOn cleanGenerated
