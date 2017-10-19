@@ -87,8 +87,8 @@ public class Classify {
     private PyFunction py_predict;
 
     public PyModule() {
-      this.interpreter.exec("from pymodule import predict");
-      this.py_predict = (PyFunction) this.interpreter.get("predict");
+      this.interpreter.exec("from pymodule import pipeline");
+      this.py_predict = (PyFunction) this.interpreter.get("pipeline");
     }
 
     public double[] predict(double c0, double c1, double c2, double c3) {
