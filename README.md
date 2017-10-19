@@ -39,3 +39,4 @@ If there is no change the payload interface, the process for updating models sho
 *  If passes all relevant tests, bundle and deploy using `gradlew buildZip`
 
 
+![screenshot](screenshot-iris-h2o-lambda.png)
