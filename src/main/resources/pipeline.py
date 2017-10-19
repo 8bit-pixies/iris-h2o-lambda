@@ -3,10 +3,8 @@ from hex.genmodel.easy import EasyPredictModelWrapper
 from java.lang import Math
 import irisModel
 import NamesHolder_irisModel
-
-def feature_preprocessing(c0, c1, c2, c3):
-    print("feature preprocessing complete...!")
-    return c0, c1, c2, c3
+from feature_preprocessing import feature_preprocessing
+from decision_engine import decision_engine
 
 def predict(vals):
     """
@@ -23,16 +21,6 @@ def predict(vals):
     p = model.predict(row)
     print("predict complete...!")
     return p
-
-def decision_engine(p):
-    """
-    Takes in the prediction object and prettifies it
-    to be consumed by the outbound payload
-    """
-    return [float(p.label), 
-    p.classProbabilities[0], 
-    p.classProbabilities[1], 
-    p.classProbabilities[2]]
 
 def pipeline(*argv):
     # add feat preprocessing here

@@ -3,7 +3,7 @@ import org.python.core.*;
 import com.amazonaws.services.lambda.runtime.Context;
 import java.util.Properties;
  
-public class Classify {
+public class ModelScorer {
 
   public static final class SharedPythonInterpreter {
     public static PythonInterpreter get() {
@@ -73,7 +73,7 @@ public class Classify {
 
   }
 
-  public static ResponseClass myHandler(RequestClass request, Context context) throws PyException {
+  public static ResponseClass handler(RequestClass request, Context context) throws PyException {
       
     PyModule module = new PyModule();
     
@@ -87,7 +87,7 @@ public class Classify {
     private PyFunction py_predict;
 
     public PyModule() {
-      this.interpreter.exec("from pymodule import pipeline");
+      this.interpreter.exec("from pipeline import pipeline");
       this.py_predict = (PyFunction) this.interpreter.get("pipeline");
     }
 
