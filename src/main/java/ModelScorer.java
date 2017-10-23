@@ -2,6 +2,7 @@ import org.python.util.PythonInterpreter;
 import org.python.core.*;
 import com.amazonaws.services.lambda.runtime.Context;
 import java.util.Properties;
+import java.util.Arrays;
  
 public class ModelScorer {
 
@@ -59,8 +60,8 @@ public class ModelScorer {
     public double getClass1Prob() { return class1Prob; }
     public void setClass1Prob(double class1Prob) { this.class1Prob = class1Prob; }
 	
-    public double getClass2Prob() { return class1Prob; }
-    public void setClass2Prob(double class2Prob) { this.class1Prob = class1Prob; }
+    public double getClass2Prob() { return class2Prob; }
+    public void setClass2Prob(double class2Prob) { this.class2Prob = class2Prob; }
 
     public ResponseClass(double[] predictions) {
       this.label = (int) predictions[0];
@@ -81,7 +82,16 @@ public class ModelScorer {
     double[] predictions = module.predict(request.c0, request.c1, request.c2, request.c3);
     return new ResponseClass(predictions);
   }
-
+  
+  public static double[] prediction(RequestClass request) {
+      
+    PyModule module = new PyModule();
+    
+    //Prediction code is in pymodule.py
+    double[] predictions = module.predict(request.c0, request.c1, request.c2, request.c3);
+    return predictions;
+  }
+  
   public static class PyModule {
     private PythonInterpreter interpreter = SharedPythonInterpreter.get();
     private PyFunction py_predict;
@@ -100,6 +110,10 @@ public class ModelScorer {
       }
       return predictions;
     }
-
+  }
+  
+  public static void main(String[] args) {    
+    RequestClass request = new RequestClass(5.1, 2.0, 1.3, 0.9);
+    System.out.println(Arrays.toString(prediction(request)));
   }
 }

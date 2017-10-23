@@ -79,3 +79,9 @@ task cleanGenerated(type: Delete) {
 }
 
 clean.dependsOn cleanGenerated
+
+// task for running main
+
+apply plugin: 'application'
+mainClassName = 'ModelScorer'
+
