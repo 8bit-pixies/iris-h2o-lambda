@@ -8,6 +8,20 @@ gradlew buildZip
 gradlew buildDocker
 ```
 
+Usage as Java Object
+--------------------
+
+```
+gradlew run
+```
+
+This will verify that the main method can be called and therefore can be integrated into any Java program as required. The main class should always be in the form:
+
+```java
+RequestClass request = new RequestClass(...);
+prediction(request);
+```
+
 Testing using `docker-lambda`
 -----------------------------
 
